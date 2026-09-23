@@ -1,0 +1,416 @@
+/*
+ * Макет снят с экрана шириной 393pt (iPhone 15/16 Pro).
+ * 1rem = 10 макетных pt при ширине 393px и масштабируется пропорционально ширине
+ * экрана, поэтому пропорции совпадают на любом телефоне.
+ */
+
+@font-face {
+  font-family: "YS Text";
+  src: url("https://yastatic.net/s3/home/fonts/ys/1/text-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: "YS Text";
+  src: url("https://yastatic.net/s3/home/fonts/ys/1/text-medium.woff2") format("woff2");
+  font-weight: 500;
+  font-display: block;
+}
+@font-face {
+  font-family: "YS Text";
+  src: url("https://yastatic.net/s3/home/fonts/ys/1/text-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: block;
+}
+
+:root {
+  --c-text: #000;
+  --c-text-secondary: #7a7a7a;
+  --c-bg: #fff;
+  --c-ticket: #0797fa;
+  --c-ticket-expired: #9e9e9e;
+  --c-ticket-body: #eee;
+  --c-cell: #fff;
+  --c-block: #f3f2f0;
+  --c-separator: #eee;
+  --c-header-top: #67c1ff;
+
+  /* Безопасные зоны: Telegram (fullscreen) → iOS/Android env() → 0 */
+  --safe-top: max(var(--tg-safe-area-inset-top, 0px) + var(--tg-content-safe-area-inset-top, 0px), env(safe-area-inset-top, 0px));
+  --safe-bottom: max(var(--tg-safe-area-inset-bottom, 0px) + var(--tg-content-safe-area-inset-bottom, 0px), env(safe-area-inset-bottom, 0px));
+
+  --header-h: 5.9rem;
+  --side: 1.5rem;
+}
+
+html {
+  font-size: clamp(8.2px, 100vw / 39.3, 11.5px);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  background: var(--c-bg);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-family: "YS Text", "Helvetica Neue", Arial, sans-serif;
+  font-size: 1.6rem;
+  line-height: 1.25;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  overscroll-behavior-y: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+svg {
+  display: block;
+  fill: currentColor;
+}
+
+/* ───────── Шапка ───────── */
+
+.topbar {
+  position: fixed;
+  z-index: 10;
+  inset: 0 0 auto;
+  height: calc(var(--safe-top) + var(--header-h));
+  padding-top: var(--safe-top);
+  background: linear-gradient(180deg, var(--c-header-top) 0%, #fff calc(100% + 0.4rem));
+}
+
+.topbar__row {
+  position: relative;
+  height: 5.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.topbar__titles {
+  text-align: center;
+  margin-top: 0.25rem;
+}
+
+.topbar__title {
+  font-size: 1.5rem;
+  line-height: 1.9rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.topbar__subtitle {
+  margin-top: -0.15rem;
+  font-size: 1.2rem;
+  line-height: 1.5rem;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.icon-btn {
+  position: absolute;
+  top: 50%;
+  width: 4.4rem;
+  height: 4.4rem;
+  margin-top: -2.2rem;
+  display: grid;
+  place-items: center;
+  transition: opacity 0.15s ease;
+}
+.icon-btn:active { opacity: 0.5; }
+
+.icon-btn svg {
+  width: 2.2rem;
+  height: 2.2rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.icon-btn--back { left: 0.35rem; }
+.icon-btn--back svg { width: 2.1rem; height: 2.1rem; }
+
+.icon-btn--refresh { right: 0.45rem; }
+.icon-btn--refresh svg { width: 2.15rem; height: 2.15rem; stroke-width: 1.95; stroke-linecap: butt; stroke-linejoin: miter; }
+.icon-btn--refresh.is-spinning svg { animation: spin 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+
+@keyframes spin { to { transform: rotate(-360deg); } }
+
+/* ───────── Страница ───────── */
+
+.page {
+  padding-top: calc(var(--safe-top) + 6.6rem);
+  padding-bottom: max(var(--safe-bottom), 3.2rem);
+}
+
+/* ───────── Билет ───────── */
+
+.ticket {
+  margin: 0 2.93rem;
+  border-radius: 3rem;
+  overflow: hidden;
+  background: var(--c-ticket-body);
+  isolation: isolate;
+}
+
+.ticket__head {
+  position: relative;
+  height: 12.8rem;
+  display: grid;
+  place-items: center;
+  background: var(--c-ticket);
+  transition: background-color 0.3s ease;
+}
+.ticket.is-expired .ticket__head { background: var(--c-ticket-expired); }
+
+/* Перфорация: белые полукруги по нижнему краю синей части, 11 шт. с шагом 1/10 ширины */
+.ticket__head::after {
+  --r: 0.39rem;
+  content: "";
+  position: absolute;
+  left: -5%;
+  width: 110%;
+  bottom: 0;
+  height: var(--r);
+  background: radial-gradient(circle at 50% 100%, #fff var(--r), transparent calc(var(--r) + 0.5px)) 0 0 / calc(100% / 11) 100% repeat-x;
+}
+
+.ticket__route {
+  color: #fff;
+  font-size: 2.2rem;
+  line-height: 2.8rem;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  margin-top: 0.1rem;
+}
+
+.ticket__body {
+  height: 28.67rem;
+  padding-top: 6.85rem;
+  text-align: center;
+}
+
+.ticket__caption {
+  font-size: 1.85rem;
+  line-height: 2.4rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.ticket__note {
+  margin-top: 6.15rem;
+  font-size: 1.22rem;
+  line-height: 1.6rem;
+  color: var(--c-text-secondary);
+}
+
+/* ───────── Таймер ───────── */
+
+.timer {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.15rem;
+}
+
+.timer__group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timer__cells {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.timer__cell {
+  width: 3.07rem;
+  height: 5.07rem;
+  border-radius: 0.8rem;
+  background: var(--c-cell);
+  display: grid;
+  place-items: center;
+  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-weight: 600;
+  font-size: 2.95rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--c-text);
+  padding-bottom: 0.3rem;
+}
+
+.timer__unit {
+  margin-top: 0.15rem;
+  font-size: 1.12rem;
+  line-height: 1.5rem;
+}
+
+.timer__colon {
+  position: relative;
+  width: 2rem;
+  height: 5.07rem;
+}
+.timer__colon::before,
+.timer__colon::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 0.38rem;
+  height: 0.38rem;
+  margin-left: -0.19rem;
+  border-radius: 50%;
+  background: var(--c-text);
+}
+.timer__colon::before { top: 2.07rem; }
+.timer__colon::after { top: 3.07rem; }
+
+/* ───────── Детали ───────── */
+
+.section-title {
+  padding: 0 var(--side);
+  font-size: 1.85rem;
+  line-height: 2.4rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.section-title--details { margin-top: 2.15rem; }
+
+.details {
+  list-style: none;
+  margin-top: 1.12rem;
+}
+
+.details__row {
+  display: flex;
+  align-items: stretch;
+  padding-left: var(--side);
+}
+
+.details__icon {
+  flex: none;
+  width: 2.06rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.details__icon svg {
+  width: 1.9rem;
+  height: 1.9rem;
+}
+.details__icon .ico-stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: square;
+}
+.details__icon .ico-board { width: 1.95rem; height: 1.95rem; }
+
+.plate-icon {
+  display: grid;
+  place-items: center;
+  width: 2.15rem;
+  height: 1.25rem;
+  border-radius: 0.3rem;
+  background: var(--c-text);
+  color: #fff;
+  font-size: 0.95rem;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-indent: 0.08em;
+}
+
+.details__text {
+  flex: 1;
+  min-width: 0;
+  margin-left: 1.66rem;
+  padding: 0.84rem var(--side) 0.97rem 0;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 0.5px solid var(--c-separator);
+}
+.details__row:last-child .details__text { border-bottom: 0; }
+
+.details__label {
+  font-size: 1.18rem;
+  line-height: 1.5rem;
+  color: var(--c-text-secondary);
+}
+
+.details__value {
+  margin-top: -0.02rem;
+  font-size: 1.44rem;
+  line-height: 1.8rem;
+}
+
+/* ───────── Стоимость ───────── */
+
+.section-title--order { margin-top: 1.63rem; }
+
+.block {
+  display: flex;
+  align-items: center;
+  width: calc(100% - 2.14rem);
+  height: 5.2rem;
+  margin: 0 1.07rem;
+  padding: 0 1.6rem 0 1.5rem;
+  border-radius: 1.6rem;
+  background: var(--c-block);
+  text-align: left;
+}
+
+.block--total {
+  margin-top: 1rem;
+  justify-content: space-between;
+}
+
+.block__label {
+  font-size: 1.48rem;
+  font-weight: 500;
+}
+
+.block__price {
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.block--support {
+  margin-top: 1rem;
+  gap: 1.55rem;
+  font-size: 1.46rem;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+.block--support:active {
+  transform: scale(0.98);
+  background: #e9e8e5;
+}
+
+.block__icon {
+  width: 2.1rem;
+  height: 2.1rem;
+  flex: none;
+}
