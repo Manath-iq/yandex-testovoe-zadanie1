@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="format-detection" content="telephone=no">
   <meta name="theme-color" content="#67C1FF">
-  <title>Образец билета</title>
+  <title>Новая поездка</title>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
@@ -20,116 +20,232 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="topbar">
-    <div class="topbar__row">
-      <button class="icon-btn icon-btn--back" type="button" aria-label="Назад" data-action="back">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 12H5M11.5 5.5 5 12l6.5 6.5"/></svg>
+  <div class="view" data-view="form">
+    <header class="topbar">
+      <div class="topbar__row">
+        <button class="icon-btn icon-btn--back" type="button" aria-label="Закрыть" data-action="close">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 12H5M11.5 5.5 5 12l6.5 6.5"/></svg>
+        </button>
+        <div class="topbar__titles">
+          <h1 class="topbar__title">Новая поездка</h1>
+          <p class="topbar__subtitle">Билет на общественный транспорт</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="page page--form">
+      <form class="form" id="trip-form" novalidate autocomplete="off">
+        <section class="recent" hidden>
+          <h2 class="section-title">Недавние поездки</h2>
+          <div class="recent__list"></div>
+        </section>
+
+        <h2 class="section-title">Транспорт</h2>
+        <div class="segmented" role="radiogroup" aria-label="Тип транспорта">
+          <label class="segmented__opt"><input type="radio" name="type" value="bus"><span>Автобус</span></label>
+          <label class="segmented__opt"><input type="radio" name="type" value="tram"><span>Трамвай</span></label>
+        </div>
+
+        <div class="field" data-field-name="route">
+          <label class="field__box">
+            <span class="field__label">Номер маршрута</span>
+            <input class="field__input" name="route" type="text" inputmode="text" enterkeyhint="next" maxlength="5" placeholder="Например, 2" autocapitalize="characters" spellcheck="false">
+          </label>
+          <p class="field__error" role="alert"></p>
+        </div>
+
+        <h2 class="section-title">Детали</h2>
+        <div class="field" data-field-name="regNumber">
+          <label class="field__box">
+            <span class="field__label">Регистрационный номер</span>
+            <input class="field__input" name="regNumber" type="text" enterkeyhint="next" maxlength="10" placeholder="Например, АБ1234" autocapitalize="characters" spellcheck="false">
+          </label>
+          <p class="field__error" role="alert"></p>
+        </div>
+        <div class="field" data-field-name="boardNumber">
+          <label class="field__box">
+            <span class="field__label">Бортовой номер</span>
+            <input class="field__input" name="boardNumber" type="text" inputmode="numeric" enterkeyhint="next" maxlength="6" placeholder="Например, 129">
+          </label>
+          <p class="field__error" role="alert"></p>
+        </div>
+        <div class="field" data-field-name="carrier">
+          <label class="field__box">
+            <span class="field__label">Перевозчик</span>
+            <input class="field__input" name="carrier" type="text" enterkeyhint="done" maxlength="60" placeholder="Название компании">
+          </label>
+          <p class="field__error" role="alert"></p>
+        </div>
+
+        <div class="segmented segmented--gap" role="radiogroup" aria-label="Направление">
+          <label class="segmented__opt"><input type="radio" name="direction" value="one"><span>В одну сторону</span></label>
+          <label class="segmented__opt"><input type="radio" name="direction" value="round"><span>Туда и обратно</span></label>
+        </div>
+
+        <h2 class="section-title">Срок действия</h2>
+        <div class="segmented" role="radiogroup" aria-label="Срок действия">
+          <label class="segmented__opt"><input type="radio" name="validity" value="30"><span>30 мин</span></label>
+          <label class="segmented__opt"><input type="radio" name="validity" value="60"><span>60 мин</span></label>
+          <label class="segmented__opt"><input type="radio" name="validity" value="90"><span>90 мин</span></label>
+        </div>
+
+        <h2 class="section-title">Стоимость</h2>
+        <div class="field" data-field-name="price">
+          <label class="field__box field__box--suffix">
+            <span class="field__label">Цена одного билета</span>
+            <input class="field__input" name="price" type="text" inputmode="numeric" enterkeyhint="done" maxlength="5" placeholder="0">
+            <span class="field__suffix" aria-hidden="true">₽</span>
+          </label>
+          <p class="field__error" role="alert"></p>
+        </div>
+
+        <div class="block block--stepper">
+          <span class="block__label-regular">Количество билетов</span>
+          <div class="stepper">
+            <button class="stepper__btn" type="button" data-action="dec" aria-label="Меньше">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12"/></svg>
+            </button>
+            <output class="stepper__value" name="count" aria-live="polite">1</output>
+            <button class="stepper__btn" type="button" data-action="inc" aria-label="Больше">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12M12 6v12"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="block block--total block--total-form">
+          <span class="block__label">Итого</span>
+          <span class="block__price" data-form-total>23₽</span>
+        </div>
+      </form>
+    </main>
+
+    <footer class="footer">
+      <button class="btn-primary" type="submit" form="trip-form">Готово</button>
+    </footer>
+  </div>
+
+  <div class="view" data-view="ticket" hidden>
+    <header class="topbar">
+      <div class="topbar__row">
+        <button class="icon-btn icon-btn--back" type="button" aria-label="Назад" data-action="to-form">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 12H5M11.5 5.5 5 12l6.5 6.5"/></svg>
+        </button>
+        <div class="topbar__titles">
+          <h1 class="topbar__title">Мои билеты</h1>
+          <p class="topbar__subtitle">Указано местное время</p>
+        </div>
+        <button class="icon-btn icon-btn--refresh" type="button" aria-label="Обновить" data-action="refresh">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.35-5.66L4 8.7"/><path d="M4 3.6v5.1h5.1"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="page">
+      <section class="ticket" aria-label="Билет (образец)">
+        <div class="watermark" aria-hidden="true">
+          <div class="watermark__inner">
+            <span>ОБРАЗЕЦ ОБРАЗЕЦ ОБРАЗЕЦ</span>
+            <span>ОБРАЗЕЦ ОБРАЗЕЦ ОБРАЗЕЦ</span>
+            <span>ОБРАЗЕЦ ОБРАЗЕЦ ОБРАЗЕЦ</span>
+            <span>ОБРАЗЕЦ ОБРАЗЕЦ ОБРАЗЕЦ</span>
+            <span>ОБРАЗЕЦ ОБРАЗЕЦ ОБРАЗЕЦ</span>
+            <span>ОБРАЗЕЦ ОБРАЗЕЦ ОБРАЗЕЦ</span>
+          </div>
+        </div>
+        <div class="ticket__head">
+          <h2 class="ticket__route" data-field="route"></h2>
+        </div>
+        <div class="ticket__body">
+          <h3 class="ticket__caption">Срок действия билета</h3>
+
+          <div class="timer" role="timer" aria-live="off">
+            <div class="timer__group">
+              <div class="timer__cells"><span class="timer__cell" data-digit="0"></span><span class="timer__cell" data-digit="1"></span></div>
+              <span class="timer__unit">мин</span>
+            </div>
+            <span class="timer__colon" aria-hidden="true"></span>
+            <div class="timer__group">
+              <div class="timer__cells"><span class="timer__cell" data-digit="2"></span><span class="timer__cell" data-digit="3"></span></div>
+              <span class="timer__unit">сек</span>
+            </div>
+            <span class="timer__colon" aria-hidden="true"></span>
+            <div class="timer__group">
+              <div class="timer__cells"><span class="timer__cell" data-digit="4"></span><span class="timer__cell" data-digit="5"></span></div>
+              <span class="timer__unit">мс</span>
+            </div>
+          </div>
+
+          <p class="ticket__note">Образец. Не является проездным документом</p>
+        </div>
+      </section>
+
+      <h2 class="section-title section-title--details">Детали</h2>
+      <ul class="details">
+        <li class="details__row" data-row="regNumber">
+          <span class="details__icon"><span class="plate-icon">???</span></span>
+          <div class="details__text">
+            <span class="details__label">Регистрационный номер</span>
+            <span class="details__value" data-field="regNumber"></span>
+          </div>
+        </li>
+        <li class="details__row" data-row="boardNumber">
+          <span class="details__icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="ico-board"><rect x="1" y="3" width="22" height="17" rx="4.4"/><path d="M4.2 9h4.3M11 9h8.8M4.2 14h10.4M17 14h2.8" stroke="#fff" stroke-width="2.1"/></svg>
+          </span>
+          <div class="details__text">
+            <span class="details__label">Бортовой номер</span>
+            <span class="details__value" data-field="boardNumber"></span>
+          </div>
+        </li>
+        <li class="details__row" data-row="carrier">
+          <span class="details__icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.9" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M2.6 10.7c3.2 1.2 5.8 1.3 9.4 1.3s6.2-.1 9.4-1.3v3.1c-2.9.1-5.3 1.4-6.3 3.3-.6 1.1-.9 2.6-.9 4.4h-4.4c0-1.8-.3-3.3-.9-4.4-1-1.9-3.4-3.2-6.3-3.3z"/><circle cx="12" cy="12.3" r="3.3"/><circle cx="12" cy="12.3" r="1.25" fill="#fff"/></svg>
+          </span>
+          <div class="details__text">
+            <span class="details__label">Перевозчик</span>
+            <span class="details__value" data-field="carrier"></span>
+          </div>
+        </li>
+        <li class="details__row" data-row="validUntil">
+          <span class="details__icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="M11.4 4.6v7.9l3.4 4.7" fill="none" stroke="#fff" stroke-width="2.1"/></svg>
+          </span>
+          <div class="details__text">
+            <span class="details__label">Действует до</span>
+            <span class="details__value" data-field="validUntil"></span>
+          </div>
+        </li>
+        <li class="details__row" data-row="direction">
+          <span class="details__icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="ico-stroke"><path d="M7.2 22V2.8M2.8 7.2l4.4-4.4 4.4 4.4M16.8 2v19.2M12.4 16.8l4.4 4.4 4.4-4.4"/></svg>
+          </span>
+          <div class="details__text">
+            <span class="details__label">Направление</span>
+            <span class="details__value" data-field="direction"></span>
+          </div>
+        </li>
+        <li class="details__row" data-row="count">
+          <span class="details__icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M1 7a3 3 0 0 1 3-3h16a3 3 0 0 1 3 3v2.2a2.8 2.8 0 0 0 0 5.6V17a3 3 0 0 1-3 3H4a3 3 0 0 1-3-3v-2.2a2.8 2.8 0 0 0 0-5.6zM9.3 6.8a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4zm0 4a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4zm0 4a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4z"/></svg>
+          </span>
+          <div class="details__text">
+            <span class="details__label">Количество билетов</span>
+            <span class="details__value" data-field="count"></span>
+          </div>
+        </li>
+      </ul>
+
+      <h2 class="section-title section-title--order">Стоимость заказа</h2>
+      <div class="block block--total">
+        <span class="block__label">Итого</span>
+        <span class="block__price" data-field="price"></span>
+      </div>
+      <button class="block block--support" type="button" data-action="support">
+        <svg viewBox="0 0 24 24" aria-hidden="true" class="block__icon"><path d="M3.9 13.6a8.1 8.1 0 0 1 16.2 0" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2 15.4a4.4 4.4 0 0 1 4.4-4.4h.8c.6 0 1 .4 1 1v6.9c0 .6-.4 1-1 1h-.8A4.4 4.4 0 0 1 2 15.5zm20 0a4.4 4.4 0 0 0-4.4-4.4h-.8c-.6 0-1 .4-1 1v6.9c0 .6.4 1 1 1h.8a4.4 4.4 0 0 0 4.4-4.4z"/><path d="M19.2 19.4c-.8 1.9-2.8 2.8-6 2.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+        <span>Обратиться в поддержку</span>
       </button>
-      <div class="topbar__titles">
-        <h1 class="topbar__title">Мои билеты</h1>
-        <p class="topbar__subtitle">Указано местное время</p>
-      </div>
-      <button class="icon-btn icon-btn--refresh" type="button" aria-label="Обновить" data-action="refresh">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.35-5.66L4 8.7"/><path d="M4 3.6v5.1h5.1"/></svg>
-      </button>
-    </div>
-  </header>
-
-  <main class="page">
-    <section class="ticket" aria-label="Билет">
-      <div class="ticket__head">
-        <h2 class="ticket__route" data-field="route"></h2>
-      </div>
-      <div class="ticket__body">
-        <h3 class="ticket__caption">Срок действия билета</h3>
-
-        <div class="timer" role="timer" aria-live="off">
-          <div class="timer__group">
-            <div class="timer__cells"><span class="timer__cell" data-digit="0"></span><span class="timer__cell" data-digit="1"></span></div>
-            <span class="timer__unit">мин</span>
-          </div>
-          <span class="timer__colon" aria-hidden="true"></span>
-          <div class="timer__group">
-            <div class="timer__cells"><span class="timer__cell" data-digit="2"></span><span class="timer__cell" data-digit="3"></span></div>
-            <span class="timer__unit">сек</span>
-          </div>
-          <span class="timer__colon" aria-hidden="true"></span>
-          <div class="timer__group">
-            <div class="timer__cells"><span class="timer__cell" data-digit="4"></span><span class="timer__cell" data-digit="5"></span></div>
-            <span class="timer__unit">мс</span>
-          </div>
-        </div>
-
-        <p class="ticket__note">Образец. Не является проездным документом</p>
-      </div>
-    </section>
-
-    <h2 class="section-title section-title--details">Детали</h2>
-    <ul class="details">
-      <li class="details__row">
-        <span class="details__icon"><span class="plate-icon">???</span></span>
-        <div class="details__text">
-          <span class="details__label">Регистрационный номер</span>
-          <span class="details__value" data-field="regNumber"></span>
-        </div>
-      </li>
-      <li class="details__row">
-        <span class="details__icon">
-          <svg viewBox="0 0 24 24" aria-hidden="true" class="ico-board"><rect x="1" y="3" width="22" height="17" rx="4.4"/><path d="M4.2 9h4.3M11 9h8.8M4.2 14h10.4M17 14h2.8" stroke="#fff" stroke-width="2.1"/></svg>
-        </span>
-        <div class="details__text">
-          <span class="details__label">Бортовой номер</span>
-          <span class="details__value" data-field="boardNumber"></span>
-        </div>
-      </li>
-      <li class="details__row">
-        <span class="details__icon">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.9" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M2.6 10.7c3.2 1.2 5.8 1.3 9.4 1.3s6.2-.1 9.4-1.3v3.1c-2.9.1-5.3 1.4-6.3 3.3-.6 1.1-.9 2.6-.9 4.4h-4.4c0-1.8-.3-3.3-.9-4.4-1-1.9-3.4-3.2-6.3-3.3z"/><circle cx="12" cy="12.3" r="3.3"/><circle cx="12" cy="12.3" r="1.25" fill="#fff"/></svg>
-        </span>
-        <div class="details__text">
-          <span class="details__label">Перевозчик</span>
-          <span class="details__value" data-field="carrier"></span>
-        </div>
-      </li>
-      <li class="details__row">
-        <span class="details__icon">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="M11.4 4.6v7.9l3.4 4.7" fill="none" stroke="#fff" stroke-width="2.1"/></svg>
-        </span>
-        <div class="details__text">
-          <span class="details__label">Действует до</span>
-          <span class="details__value" data-field="validUntil"></span>
-        </div>
-      </li>
-      <li class="details__row">
-        <span class="details__icon">
-          <svg viewBox="0 0 24 24" aria-hidden="true" class="ico-stroke"><path d="M7.2 22V2.8M2.8 7.2l4.4-4.4 4.4 4.4M16.8 2v19.2M12.4 16.8l4.4 4.4 4.4-4.4"/></svg>
-        </span>
-        <div class="details__text">
-          <span class="details__label">Направление</span>
-          <span class="details__value" data-field="direction"></span>
-        </div>
-      </li>
-      <li class="details__row">
-        <span class="details__icon">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M1 7a3 3 0 0 1 3-3h16a3 3 0 0 1 3 3v2.2a2.8 2.8 0 0 0 0 5.6V17a3 3 0 0 1-3 3H4a3 3 0 0 1-3-3v-2.2a2.8 2.8 0 0 0 0-5.6zM9.3 6.8a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4zm0 4a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4zm0 4a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4z"/></svg>
-        </span>
-        <div class="details__text">
-          <span class="details__label">Количество билетов</span>
-          <span class="details__value" data-field="count"></span>
-        </div>
-      </li>
-    </ul>
-
-    <h2 class="section-title section-title--order">Стоимость заказа</h2>
-    <div class="block block--total">
-      <span class="block__label">Итого</span>
-      <span class="block__price" data-field="price"></span>
-    </div>
-    <button class="block block--support" type="button" data-action="support">
-      <svg viewBox="0 0 24 24" aria-hidden="true" class="block__icon"><path d="M3.9 13.6a8.1 8.1 0 0 1 16.2 0" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2 15.4a4.4 4.4 0 0 1 4.4-4.4h.8c.6 0 1 .4 1 1v6.9c0 .6-.4 1-1 1h-.8A4.4 4.4 0 0 1 2 15.5zm20 0a4.4 4.4 0 0 0-4.4-4.4h-.8c-.6 0-1 .4-1 1v6.9c0 .6.4 1 1 1h.8a4.4 4.4 0 0 0 4.4-4.4z"/><path d="M19.2 19.4c-.8 1.9-2.8 2.8-6 2.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
-      <span>Обратиться в поддержку</span>
-    </button>
-  </main>
+    </main>
+  </div>
 
   <script src="app.js"></script>
 </body>
