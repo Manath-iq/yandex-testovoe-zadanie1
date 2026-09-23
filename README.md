@@ -39,6 +39,14 @@
 1. В [@BotFather](https://t.me/BotFather): `/mybots` → бот → **Bot Settings → Configure Mini App → Enable Mini App**, указать URL демо.
 2. Либо **Menu Button** с тем же URL.
 
+## Кэш
+
+GitHub Pages отдаёт файлы с `max-age=600`, а Telegram держит кэш ещё дольше. Поэтому `styles.css` и `app.js` подключены с версией в ссылке (`?v=<хэш>`). После правок её нужно обновить:
+
+```bash
+git hash-object styles.css app.js | cut -c1-8
+```
+
 ## Локальный запуск
 
 ```bash
